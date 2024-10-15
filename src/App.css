@@ -1,0 +1,12 @@
+.nav-link {
+  @apply flex;
+  @apply items-center;
+  @apply rounded-full;
+  @apply px-4;
+  @apply py-2;
+  @apply hover:bg-blue-700;
+  @apply hover:text-white;
+  @apply transition;
+  @apply ease-in-out;
+  @apply duration-200;
+}

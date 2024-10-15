@@ -1,4 +1,5 @@
 export const Icons = {
+  cross: '❌',
   plus: '➕',
-  cross: '❌'
-}
+  submit: '✔️',
+};

@@ -13,7 +13,7 @@ function InputText({ label, value, onChange }: Props) {
           type="number"
           value={value}
           onChange={onChange}
-          className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
+          className="mt-1 p-2 block w-full rounded-full border border-gray-300 shadow-sm"
         />
       </label>
     </div>

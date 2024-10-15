@@ -3,6 +3,7 @@ import ChargePoint from '@/components/ChargePoint';
 import InputNumber from '@/components/InputNumber';
 import InputRange from '@/components/InputRange';
 import { Input } from '@/models';
+import IconButton from '../IconButton';
 
 const InputForm = ({ onSubmit }: { onSubmit: (data: Input) => void }) => {
   const defaultChargePoint = { power: 11, count: 1 };
@@ -83,12 +84,12 @@ const InputForm = ({ onSubmit }: { onSubmit: (data: Input) => void }) => {
         onChange={(e) => setCarConsumption(Number(e.target.value))}
       />
 
-      <button
+      <IconButton
+        ariaLabel="Submit"
+        label="Submit"
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md"
-      >
-        Submit
-      </button>
+        rightIcon="submit"
+      />
     </form>
   );
 };

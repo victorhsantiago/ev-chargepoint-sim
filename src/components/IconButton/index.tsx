@@ -1,4 +1,5 @@
 import { Icons } from '@/models';
+import './style.css';
 
 type Props = {
   ariaLabel: string;
@@ -6,7 +7,9 @@ type Props = {
   label?: string;
   leftIcon?: keyof typeof Icons;
   rightIcon?: keyof typeof Icons;
-  onClick: () => void;
+  style?: 'primary' | 'secondary';
+  type?: 'button' | 'submit' | 'reset' | undefined;
+  onClick?: () => void;
 };
 
 function IconButton({
@@ -15,12 +18,14 @@ function IconButton({
   label,
   leftIcon,
   rightIcon,
+  style = 'primary',
+  type = 'button',
   onClick,
 }: Props) {
   return (
     <button
-      className={`flex gap-2 text-blue-500 ${className || ''}`.trim()}
-      type="button"
+      className={`icon-button ${style == 'primary' && 'icon-button--primary'} ${style == 'secondary' && 'icon-button--secondary'} ${className || ''}`.trim()}
+      type={type}
       onClick={onClick}
       aria-label={ariaLabel}
     >
