@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import InputForm from '../../components/InputForm';
-import OutputDisplay from '../../components/OutputDisplay';
+import InputForm from '@/components/InputForm';
+import OutputDisplay from '@/components/OutputDisplay';
+import { Input, Output } from '@/models';
 
 const App = () => {
-  const [outputData, setOutputData] = useState(null);
+  const [outputData, setOutputData] = useState<Output | null>(null);
 
-  const handleFormSubmit = (data: any) => {
-    // Calculate total energy charged, charging events, etc.
-    const totalEnergyCharged = data.chargePoints * data.chargingPower * 24; // Just an example
-    const chargingEvents = Math.round(Math.random() * 100); // Random example
+  const handleFormSubmit = (data: Input) => {
+    const totalEnergyCharged = data.chargePoints * data.chargingPower * 24;
+    const chargingEvents = Math.round(Math.random() * 100);
 
     setOutputData({
       ...data,

@@ -1,4 +1,5 @@
-import InputNumber from '../InputNumber';
+import InputNumber from '@/components/InputNumber';
+import IconButton from '@/components/IconButton';
 
 type Props = {
   chargePointTypes: {
@@ -40,24 +41,21 @@ function ChargePoint({
             }
           />
 
-          <button
-            type="button"
+          <IconButton
+            ariaLabel="Remove charge point type"
+            className="self-end p-2"
+            leftIcon="cross"
             onClick={() => removeChargePointType(index)}
-            aria-label="Remove charge point type"
-          >
-            ❌
-          </button>
+          />
         </div>
       ))}
-      <button
-        type="button"
+
+      <IconButton
+        ariaLabel="Add Charge Point Type"
+        label="Add Charge Point Type"
+        leftIcon="plus"
         onClick={addChargePointType}
-        className="text-blue-500"
-        aria-label="Add new charge point type"
-        title="Add new charge point type"
-      >
-        + Add Charge Point Type
-      </button>
+      />
     </>
   );
 }

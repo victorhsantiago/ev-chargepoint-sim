@@ -1,9 +1,10 @@
 import { FormEvent, useCallback, useMemo, useState } from 'react';
-import ChargePoint from '../ChargePoint';
-import InputNumber from '../InputNumber';
-import InputRange from '../InputRange';
+import ChargePoint from '@/components/ChargePoint';
+import InputNumber from '@/components/InputNumber';
+import InputRange from '@/components/InputRange';
+import { Input } from '@/models';
 
-const InputForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
+const InputForm = ({ onSubmit }: { onSubmit: (data: Input) => void }) => {
   const defaultChargePoint = { power: 11, count: 1 };
 
   const [arrivalProbability, setArrivalProbability] = useState(100);
