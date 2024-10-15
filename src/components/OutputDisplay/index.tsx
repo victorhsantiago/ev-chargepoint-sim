@@ -1,35 +1,37 @@
 import { Output } from '@/models';
+import PairTable from '../PairTable';
 
 const OutputDisplay = ({ data }: { data: Output }) => {
   return (
-    <div className="p-4 bg-gray-100 shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Output Summary</h2>
-      <p>
-        <strong>Total Charge Points:</strong> {data.chargePoints}
-      </p>
-
-      <p>
-        <strong>Arrival Probability Multiplier:</strong>{' '}
-        {data.arrivalProbability}%
-      </p>
-
-      <p>
-        <strong>Car Consumption:</strong> {data.carConsumption}kWh
-      </p>
-
-      <p>
-        <strong>Charging Power per Charge Point:</strong> {data.chargingPower}
-        kW
-      </p>
-
-      <p>
-        <strong>Total Energy Charged:</strong> {data.totalEnergyCharged}kWh
-      </p>
-
-      <p>
-        <strong>Charging Events:</strong> {data.chargingEvents} per day
-      </p>
-    </div>
+    <PairTable
+      title="Output Summary"
+      data={[
+        {
+          label: 'Total Charge Points:',
+          value: data.chargePoints,
+        },
+        {
+          label: 'Arrival Probability Multiplier',
+          value: `${data.arrivalProbability}%`,
+        },
+        {
+          label: 'Car Consumption:',
+          value: `${data.carConsumption} kWh`,
+        },
+        {
+          label: 'Charging Power per Charge Point:',
+          value: `${data.chargingPower} kW`,
+        },
+        {
+          label: 'Total Energy Charged:',
+          value: `${data.totalEnergyCharged} kWh`,
+        },
+        {
+          label: 'Charging Events:',
+          value: `${data.chargingEvents} per day`,
+        },
+      ]}
+    />
   );
 };
 
