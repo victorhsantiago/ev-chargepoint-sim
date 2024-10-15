@@ -4,7 +4,7 @@ type Props = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function InputText({ label, value, onChange }: Props) {
+function InputNumber({ label, value, onChange }: Props) {
   return (
     <div className="grow">
       <label className="block text-sm font-medium text-gray-700">
@@ -20,4 +20,4 @@ function InputText({ label, value, onChange }: Props) {
   );
 }
 
-export default InputText;
+export default InputNumber;
