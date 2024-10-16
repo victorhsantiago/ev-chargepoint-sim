@@ -38,8 +38,8 @@ function Simulation() {
           </div>
 
           <IconButton
-            ariaLabel="Submit"
-            label="Submit"
+            ariaLabel="Simulate"
+            label="Simulate"
             type="submit"
             rightIcon="submit"
           />

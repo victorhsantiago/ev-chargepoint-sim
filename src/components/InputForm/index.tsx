@@ -85,8 +85,8 @@ const InputForm = ({ onSubmit }: { onSubmit: (data: Input) => void }) => {
       />
 
       <IconButton
-        ariaLabel="Submit"
-        label="Submit"
+        ariaLabel="Execute"
+        label="Execute"
         type="submit"
         rightIcon="submit"
       />
