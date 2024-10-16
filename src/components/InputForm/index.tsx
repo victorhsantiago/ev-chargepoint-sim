@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useState } from 'react';
 import ChargePoint from '@/components/ChargePoint';
 import InputNumber from '@/components/InputNumber';
 import InputRange from '@/components/InputRange';
@@ -14,34 +14,25 @@ const InputForm = ({ onSubmit }: { onSubmit: (data: Input) => void }) => {
     defaultChargePoint,
   ]);
 
-  const totalChargePoints = useMemo(
-    () => chargePointTypes.reduce((acc, cp) => acc + cp.count, 0),
-    [chargePointTypes]
+  const totalChargePoints = chargePointTypes.reduce(
+    (acc, cp) => acc + cp.count,
+    0
   );
 
-  const totalChargingPower = useMemo(
-    () => chargePointTypes.reduce((acc, cp) => acc + cp.power * cp.count, 0),
-    [chargePointTypes]
+  const totalChargingPower = chargePointTypes.reduce(
+    (acc, cp) => acc + cp.power * cp.count,
+    0
   );
 
-  const handleSubmit = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      onSubmit({
-        arrivalProbability,
-        carConsumption,
-        chargePoints: totalChargePoints,
-        chargingPower: totalChargingPower,
-      });
-    },
-    [
-      onSubmit,
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit({
       arrivalProbability,
       carConsumption,
-      totalChargePoints,
-      totalChargingPower,
-    ]
-  );
+      chargePoints: totalChargePoints,
+      chargingPower: totalChargingPower,
+    });
+  };
 
   const addChargePointType = useCallback(() => {
     setChargePointTypes([...chargePointTypes, { power: 11, count: 1 }]);
@@ -51,17 +42,14 @@ const InputForm = ({ onSubmit }: { onSubmit: (data: Input) => void }) => {
     setChargePointTypes((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const updateChargePointType = (
-    index: number,
-    field: 'power' | 'count',
-    value: number
-  ) => {
-    const updatedTypes = chargePointTypes.map((cp, i) => {
-      return i === index ? { ...cp, [field]: value } : cp;
-    });
-
-    setChargePointTypes(updatedTypes);
-  };
+  const updateChargePointType = useCallback(
+    (index: number, field: 'power' | 'count', value: number) => {
+      setChargePointTypes((prev) =>
+        prev.map((cp, i) => (i === index ? { ...cp, [field]: value } : cp))
+      );
+    },
+    []
+  );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
