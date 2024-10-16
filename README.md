@@ -1,50 +1,73 @@
-# React + TypeScript + Vite
+# Reonic · Hometask
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+The Charge Point Visualization Tool is a web app that lets users see how electric vehicle charging points work. Users can set up different types of charge points and see the results in an easy-to-use interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Input Parameters:
+  - Number of charge points
+  - Arrival probability multiplier (20-200%, default: 100%)
+  - Car consumption (default: 18 kWh)
+  - Charging power per charge point (default: 11 kW)
+- Dynamic Charge Point Management:
+  - Add and remove different types of charge points (e.g., 5 x 11kW, 3 x 22kW, 1 x 50kW)
+- Output Metrics:
+  - Total charging values (in kW) per charge point
+  - Total energy charged (in kWh)
+  - Number of charging events per year/month/week/day
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+- **Frontend**: React
+- **Styling**: Tailwind CSS
+- **Typescript**: Used for type safety
+- **Linting**: Eslint
+- **Code Formatting**: Prettier
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Getting Started
+
+### Install dependencies:
+
+```bash
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Run the Application
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```bash
+npm run dev
+```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Usage
+
+### Simulation
+
+1. **Insert Seed**: Use the input field to add/modify the seed number.
+2. **Set number of Charge Points**: Adjuts the amount of charge points to be used in the simulation.
+3. **Get your Results**: Hit the `Simulate` button the see the simulation output.
+
+### Visualizer
+
+1. **Configure Charge Points**: Use the input fields to set the desired number of charge points, their power, and count.
+2. **Set Parameters**: Adjust the arrival probability multiplier and car consumption as needed.
+3. **Add/Remove Charge Points**: Click the `+ Add Charge Point Type` button to add a new charge point type, or click "Remove" to delete an existing one.
+4. **Submit Data**: Click the `Execute` button to visualize the results based on your inputs.
+
+## Tests
+
+### Unit tests
+
+Several components are test covered, as well the scripts for running the simulation.
+
+### Test Tech Stack
+
+- Vitest
+- React Testing Library
+
+### Running tests
+
+```bash
+npm run test
 ```
