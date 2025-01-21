@@ -1,12 +1,10 @@
-export const NUM_CHARGEPOINTS = 20;
 export const MAX_POWER_PER_CHARGEPOINT = 11; // kW
 export const INTERVALS_PER_DAY = 96; // 24 hours * 4 (15-minute intervals)
 export const DAYS_PER_YEAR = 365;
 export const TOTAL_INTERVALS = INTERVALS_PER_DAY * DAYS_PER_YEAR;
-export const ENERGY_PER_100KM = 18; // kWh
 
 // prettier-ignore
-export const ARRIVAL_PROBABILITY_DISTRIBUTION: number[] = [
+export const BASE_PROBABILITY_DISTRIBUTION: number[] = [
   0.0094, 0.0094, 0.0094, 0.0094, // 00:00 - 01:00
   0.0094, 0.0094, 0.0094, 0.0094, // 01:00 - 02:00
   0.0094, 0.0094, 0.0094, 0.0094, // 02:00 - 03:00

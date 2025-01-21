@@ -1,25 +1,29 @@
 import { SimulationResult } from '@/models';
 import { initializeChargePoints } from './chargePoint';
 import {
-  ARRIVAL_PROBABILITY_DISTRIBUTION,
+  BASE_PROBABILITY_DISTRIBUTION,
   TOTAL_INTERVALS,
   INTERVALS_PER_DAY,
-  ENERGY_PER_100KM,
-  MAX_POWER_PER_CHARGEPOINT,
   CHARGING_NEEDS_DISTRIBUTION,
 } from './constants';
 import { mulberry32 } from './random';
 
 export function runSimulation(
   seed: number,
-  numChargepoints: number
+  numChargepoints: number,
+  arrivalMultiplier: number,
+  consumption: number,
+  chargingPower: number
 ): SimulationResult {
   const seededRandom = mulberry32(seed);
   const chargepoints = initializeChargePoints(numChargepoints);
+  const dailyData: SimulationResult['dailyData'] = [];
+  const arrivalProbabilityDistribution = BASE_PROBABILITY_DISTRIBUTION.map(
+    (prob) => prob * (arrivalMultiplier / 100)
+  );
 
   let totalEnergyConsumed = 0;
   let maxActualDemand = 0;
-  const powerDemand: number[] = Array(TOTAL_INTERVALS).fill(0);
 
   for (let t = 0; t < TOTAL_INTERVALS; t++) {
     let currentPowerDemand = 0;
@@ -37,15 +41,18 @@ export function runSimulation(
         }
       } else {
         const arrivalChance =
-          ARRIVAL_PROBABILITY_DISTRIBUTION[t % INTERVALS_PER_DAY];
+          arrivalProbabilityDistribution[t % INTERVALS_PER_DAY];
         if (seededRandom() < arrivalChance) {
-          const [intervalsNeeded, energyNeeded] =
-            getChargingDurationAndPower(seededRandom);
+          const [intervalsNeeded, energyNeeded] = getChargingDurationAndPower(
+            seededRandom,
+            consumption,
+            chargingPower
+          );
 
           if (intervalsNeeded > 0) {
             chargepoint.isOccupied = true;
             chargepoint.remainingTime = intervalsNeeded;
-            chargepoint.chargingPower = MAX_POWER_PER_CHARGEPOINT;
+            chargepoint.chargingPower = chargingPower;
 
             totalEnergyConsumed += energyNeeded;
             currentPowerDemand += chargepoint.chargingPower;
@@ -55,10 +62,11 @@ export function runSimulation(
     }
 
     maxActualDemand = Math.max(maxActualDemand, currentPowerDemand);
-    powerDemand[t] = currentPowerDemand;
+    if (t < INTERVALS_PER_DAY)
+      dailyData[t] = { interval: t, power: currentPowerDemand };
   }
 
-  const theoreticalMaxDemand = numChargepoints * MAX_POWER_PER_CHARGEPOINT;
+  const theoreticalMaxDemand = numChargepoints * chargingPower;
   const concurrencyFactor = maxActualDemand / theoreticalMaxDemand;
 
   return {
@@ -66,10 +74,15 @@ export function runSimulation(
     theoreticalMaxDemand,
     maxActualDemand,
     concurrencyFactor,
+    dailyData,
   };
 }
 
-function getChargingDurationAndPower(random: () => number): [number, number] {
+function getChargingDurationAndPower(
+  random: () => number,
+  consumption: number,
+  chargingPower: number
+): [number, number] {
   const rand = random();
   let energyNeeded = 0;
   let cumulativeProb = 0;
@@ -78,7 +91,7 @@ function getChargingDurationAndPower(random: () => number): [number, number] {
     cumulativeProb += CHARGING_NEEDS_DISTRIBUTION[i].prob;
     if (rand <= cumulativeProb) {
       const kmNeeded = CHARGING_NEEDS_DISTRIBUTION[i].km;
-      energyNeeded = (kmNeeded / 100) * ENERGY_PER_100KM;
+      energyNeeded = (kmNeeded / 100) * consumption;
       break;
     }
   }
@@ -87,7 +100,7 @@ function getChargingDurationAndPower(random: () => number): [number, number] {
     return [0, 0];
   }
 
-  const chargingDuration = (energyNeeded / MAX_POWER_PER_CHARGEPOINT) * 60;
+  const chargingDuration = (energyNeeded / chargingPower) * 60;
   const intervalsNeeded = Math.ceil(chargingDuration / 15);
 
   return [intervalsNeeded, energyNeeded];
