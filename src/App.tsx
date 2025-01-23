@@ -1,27 +1,90 @@
 import './App.css';
-import { Link, Outlet } from 'react-router-dom';
+import { FormEvent, useState } from 'react';
+import { SimulationResult } from '@/models';
+import ChargeStation from '@/components/ChargeStation';
+import InputNumber from '@/components/InputNumber';
+import IconButton from '@/components/IconButton';
+import { runSimulation } from '@/utils/simulation';
+import InputRange from '@/components/InputRange';
+import ExemplaryDayChart from '@/components/ExemplaryDayChart';
 
 function App() {
-  return (
-    <div className="md:grid grid-cols-12">
-      <nav className="col-span-2 p-2" role="navigation">
-        <ul className="flex md:flex-col gap-2">
-          <li>
-            <Link className="nav-link" to={`simulation`}>
-              Task 1 - Simulation
-            </Link>
-          </li>
-          <li>
-            <Link className="nav-link" to={`visualizer`}>
-              Task 2 - Visualizer
-            </Link>
-          </li>
-        </ul>
-      </nav>
+  const [seed, setSeed] = useState(12345);
+  const [numChargepoints, setNumChargepoints] = useState(20);
+  const [arrivalProbabilityMultiplier, setArrivalProbabilityMultiplier] =
+    useState(100);
+  const [consumption, setConsumption] = useState(18);
+  const [chargingPower, setChargingPower] = useState(11);
+  const [simulationResult, setSimulationResult] =
+    useState<SimulationResult | null>(null);
 
-      <main className="col-span-10 min-h-screen">
-        <Outlet />
-      </main>
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const result = await runSimulation({
+      arrivalProbabilityMultiplier,
+      chargingPower,
+      consumption,
+      numChargepoints,
+      seed,
+    });
+    setSimulationResult(result);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="grid gap-4 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold">Charging Station Simulation</h1>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col gap-4">
+            <InputNumber
+              label="Seed"
+              value={seed}
+              onChange={(e) => setSeed(Number(e.target.value))}
+            />
+
+            <InputNumber
+              label="Number of Charge Points:"
+              value={numChargepoints}
+              onChange={(e) => setNumChargepoints(Number(e.target.value))}
+            />
+
+            <InputRange
+              label="Arrival Probability Multiplier (%)"
+              value={arrivalProbabilityMultiplier}
+              onChange={(e) =>
+                setArrivalProbabilityMultiplier(Number(e.target.value))
+              }
+            />
+
+            <InputNumber
+              label="Car Consumption (kWh)"
+              value={consumption}
+              onChange={(e) => setConsumption(Number(e.target.value))}
+            />
+
+            <InputNumber
+              label="Charging Power (kW)"
+              value={chargingPower}
+              onChange={(e) => setChargingPower(Number(e.target.value))}
+            />
+          </div>
+
+          <IconButton
+            ariaLabel="Simulate"
+            label="Simulate"
+            type="submit"
+            rightIcon="submit"
+          />
+        </form>
+
+        {simulationResult && (
+          <>
+            <ChargeStation simulationResult={simulationResult} />
+            <ExemplaryDayChart dailyData={simulationResult.dailyData} />
+          </>
+        )}
+      </div>
     </div>
   );
 }
