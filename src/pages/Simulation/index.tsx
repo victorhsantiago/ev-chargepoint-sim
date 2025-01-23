@@ -5,25 +5,27 @@ import InputNumber from '@/components/InputNumber';
 import IconButton from '@/components/IconButton';
 import { runSimulation } from '@/utils/simulation';
 import InputRange from '@/components/InputRange';
+import ExemplaryDayChart from '@/components/ExemplaryDayChart';
 
 function Simulation() {
   const [seed, setSeed] = useState(12345);
   const [numChargepoints, setNumChargepoints] = useState(20);
-  const [arrivalProbability, setArrivalProbability] = useState(100);
-  const [carConsumption, setCarConsumption] = useState(18);
+  const [arrivalProbabilityMultiplier, setArrivalProbabilityMultiplier] =
+    useState(100);
+  const [consumption, setConsumption] = useState(18);
   const [chargingPower, setChargingPower] = useState(11);
   const [simulationResult, setSimulationResult] =
     useState<SimulationResult | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const result = runSimulation(
-      seed,
+    const result = await runSimulation({
+      arrivalProbabilityMultiplier,
+      chargingPower,
+      consumption,
       numChargepoints,
-      arrivalProbability,
-      carConsumption,
-      chargingPower
-    );
+      seed,
+    });
     setSimulationResult(result);
   };
 
@@ -48,14 +50,16 @@ function Simulation() {
 
             <InputRange
               label="Arrival Probability Multiplier (%)"
-              value={arrivalProbability}
-              onChange={(e) => setArrivalProbability(Number(e.target.value))}
+              value={arrivalProbabilityMultiplier}
+              onChange={(e) =>
+                setArrivalProbabilityMultiplier(Number(e.target.value))
+              }
             />
 
             <InputNumber
               label="Car Consumption (kWh)"
-              value={carConsumption}
-              onChange={(e) => setCarConsumption(Number(e.target.value))}
+              value={consumption}
+              onChange={(e) => setConsumption(Number(e.target.value))}
             />
 
             <InputNumber
@@ -76,6 +80,7 @@ function Simulation() {
         {simulationResult && (
           <>
             <ChargeStation simulationResult={simulationResult} />
+            <ExemplaryDayChart dailyData={simulationResult.dailyData} />
           </>
         )}
       </div>

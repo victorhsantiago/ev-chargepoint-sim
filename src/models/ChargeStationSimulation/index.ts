@@ -9,5 +9,5 @@ export type SimulationResult = {
   theoreticalMaxDemand: number;
   maxActualDemand: number;
   concurrencyFactor: number;
-  dailyData: { interval: number; power: number }[];
+  dailyData: { time: string; power: number }[];
 };

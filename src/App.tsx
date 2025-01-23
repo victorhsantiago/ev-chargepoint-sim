@@ -8,12 +8,12 @@ function App() {
         <ul className="flex md:flex-col gap-2">
           <li>
             <Link className="nav-link" to={`simulation`}>
-              Simulation
+              Task 1 - Simulation
             </Link>
           </li>
           <li>
             <Link className="nav-link" to={`visualizer`}>
-              Visualizer
+              Task 2 - Visualizer
             </Link>
           </li>
         </ul>

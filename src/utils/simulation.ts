@@ -1,4 +1,4 @@
-import { SimulationResult } from '@/models';
+import { ChargePoint, SimulationResult } from '@/models';
 import { initializeChargePoints } from './chargePoint';
 import {
   BASE_PROBABILITY_DISTRIBUTION,
@@ -8,18 +8,35 @@ import {
 } from './constants';
 import { mulberry32 } from './random';
 
-export function runSimulation(
-  seed: number,
-  numChargepoints: number,
-  arrivalMultiplier: number,
-  consumption: number,
-  chargingPower: number
-): SimulationResult {
+interface SimulationOptions {
+  seed: number;
+  numChargepoints: number;
+  arrivalProbabilityMultiplier: number;
+  consumption: number;
+  chargingPower: number;
+}
+
+/**
+ * Run a simulation with the given parameters
+ * @param seed - Seed for the random number generator
+ * @param numChargepoints - Number of chargepoints in the simulation
+ * @param arrivalProbabilityMultiplier - Multiplier for the arrival probability
+ * @param consumption - Energy consumption of the cars in kWh per 100 km
+ * @param chargingPower - Charging power of the chargepoints in kW
+ * @returns Promise with the simulation result
+ */
+export async function runSimulation({
+  seed,
+  numChargepoints,
+  arrivalProbabilityMultiplier,
+  consumption,
+  chargingPower,
+}: SimulationOptions): Promise<SimulationResult> {
   const seededRandom = mulberry32(seed);
   const chargepoints = initializeChargePoints(numChargepoints);
-  const dailyData: SimulationResult['dailyData'] = [];
+  const powerDemandPerInterval: number[] = [];
   const arrivalProbabilityDistribution = BASE_PROBABILITY_DISTRIBUTION.map(
-    (prob) => prob * (arrivalMultiplier / 100)
+    (prob) => prob * (arrivalProbabilityMultiplier / 100)
   );
 
   let totalEnergyConsumed = 0;
@@ -28,46 +45,41 @@ export function runSimulation(
   for (let t = 0; t < TOTAL_INTERVALS; t++) {
     let currentPowerDemand = 0;
 
+    if (t % 1000 === 0) {
+      // yeild the thread to the event loop every 1000 iterations
+      // to prevent the browser from freezing
+      await new Promise(requestAnimationFrame);
+    }
+
     for (let i = 0; i < numChargepoints; i++) {
       const chargepoint = chargepoints[i];
 
       if (chargepoint.isOccupied) {
-        chargepoint.remainingTime -= 1;
+        updateChargePoint(chargepoint);
+
         currentPowerDemand += chargepoint.chargingPower;
-
-        if (chargepoint.remainingTime === 0) {
-          chargepoint.isOccupied = false;
-          chargepoint.chargingPower = 0;
-        }
       } else {
-        const arrivalChance =
-          arrivalProbabilityDistribution[t % INTERVALS_PER_DAY];
-        if (seededRandom() < arrivalChance) {
-          const [intervalsNeeded, energyNeeded] = getChargingDurationAndPower(
-            seededRandom,
-            consumption,
-            chargingPower
-          );
-
-          if (intervalsNeeded > 0) {
-            chargepoint.isOccupied = true;
-            chargepoint.remainingTime = intervalsNeeded;
-            chargepoint.chargingPower = chargingPower;
-
-            totalEnergyConsumed += energyNeeded;
-            currentPowerDemand += chargepoint.chargingPower;
-          }
-        }
+        handleNewArrival({
+          t,
+          chargepoint,
+          consumption,
+          chargingPower,
+          arrivalProbabilityDistribution,
+          seededRandom,
+        });
       }
     }
 
+    totalEnergyConsumed += currentPowerDemand;
     maxActualDemand = Math.max(maxActualDemand, currentPowerDemand);
-    if (t < INTERVALS_PER_DAY)
-      dailyData[t] = { interval: t, power: currentPowerDemand };
+    powerDemandPerInterval.push(currentPowerDemand);
   }
 
   const theoreticalMaxDemand = numChargepoints * chargingPower;
   const concurrencyFactor = maxActualDemand / theoreticalMaxDemand;
+
+  const dailyDataExemplary = getExemplaryDayData(powerDemandPerInterval);
+  const dailyData = aggregateHourly(dailyDataExemplary);
 
   return {
     totalEnergyConsumed,
@@ -78,11 +90,60 @@ export function runSimulation(
   };
 }
 
-function getChargingDurationAndPower(
+function updateChargePoint(chargepoint: ChargePoint): void {
+  chargepoint.remainingTime -= 1;
+
+  if (chargepoint.remainingTime === 0) {
+    chargepoint.isOccupied = false;
+    chargepoint.chargingPower = 0;
+  }
+}
+
+interface HandleNewArrivalOptions {
+  t: number;
+  chargepoint: ChargePoint;
+  consumption: number;
+  chargingPower: number;
+  arrivalProbabilityDistribution: number[];
+  seededRandom: () => number;
+}
+
+function handleNewArrival({
+  t,
+  chargepoint,
+  consumption,
+  chargingPower,
+  arrivalProbabilityDistribution,
+  seededRandom,
+}: HandleNewArrivalOptions) {
+  const arrivalChance = arrivalProbabilityDistribution[t % INTERVALS_PER_DAY];
+  if (seededRandom() < arrivalChance) {
+    const intervalsNeeded = getChargingDuration(
+      seededRandom,
+      consumption,
+      chargingPower
+    );
+
+    if (intervalsNeeded > 0) {
+      chargepoint.isOccupied = true;
+      chargepoint.remainingTime = intervalsNeeded;
+      chargepoint.chargingPower = chargingPower;
+    }
+  }
+}
+
+/**
+ * Get the charging duration and power for a car
+ * @param random - Random number generator function
+ * @param consumption - Energy consumption of the cars in kWh per 100 km
+ * @param chargingPower - Charging power of the chargepoints in kW
+ * @returns Tuple with the charging duration and power
+ */
+function getChargingDuration(
   random: () => number,
   consumption: number,
   chargingPower: number
-): [number, number] {
+): number {
   const rand = random();
   let energyNeeded = 0;
   let cumulativeProb = 0;
@@ -97,11 +158,52 @@ function getChargingDurationAndPower(
   }
 
   if (energyNeeded === 0) {
-    return [0, 0];
+    return 0;
   }
 
   const chargingDuration = (energyNeeded / chargingPower) * 60;
   const intervalsNeeded = Math.ceil(chargingDuration / 15);
 
-  return [intervalsNeeded, energyNeeded];
+  return intervalsNeeded;
+}
+
+/**
+ * Get the exemplary day data for a given day index
+ * @param powerDemandPerInterval - Array with the power demand per interval
+ * @param dayIndex - Index of the day to get the data for
+ * @returns Array with the exemplary day data
+ */
+function getExemplaryDayData(powerDemandPerInterval: number[], dayIndex = 42) {
+  const startIndex = dayIndex * INTERVALS_PER_DAY;
+  const endIndex = startIndex + INTERVALS_PER_DAY;
+
+  return powerDemandPerInterval.slice(startIndex, endIndex);
+}
+
+/**
+ * Aggregate the exemplary day data to hourly data
+ * @param dailySlice - Array with the exemplary day data
+ * @returns Array with the hourly data
+ */
+function aggregateHourly(dailySlice: number[]) {
+  const result: SimulationResult['dailyData'] = [];
+
+  for (let hour = 0; hour < 24; hour++) {
+    const start = hour * 4;
+    const end = start + 4;
+
+    let sum = 0;
+
+    for (let i = start; i < end; i++) {
+      sum += dailySlice[i];
+    }
+
+    const avgPower = sum / 4;
+
+    const label = `${hour.toString().padStart(2, '0')}:00`;
+
+    result.push({ time: label, power: avgPower });
+  }
+
+  return result;
 }
