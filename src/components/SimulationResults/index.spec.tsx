@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import ChargeStation from './index';
+import SimulationResults from './index';
 import { SimulationResult } from '@/models';
 
 describe('ChargeStation Component', () => {
@@ -12,7 +12,7 @@ describe('ChargeStation Component', () => {
   };
 
   it('should render the simulation results table with correct data', () => {
-    render(<ChargeStation simulationResult={mockSimulationResult} />);
+    render(<SimulationResults simulationResult={mockSimulationResult} />);
 
     const title = screen.getByText('Simulation Results');
     expect(title).toBeDefined();

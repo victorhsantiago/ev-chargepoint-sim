@@ -1,7 +1,7 @@
 import './App.css';
 import { FormEvent, useState } from 'react';
 import { SimulationResult } from '@/models';
-import ChargeStation from '@/components/ChargeStation';
+import SimulationResults from '@/components/SimulationResults';
 import InputNumber from '@/components/InputNumber';
 import IconButton from '@/components/IconButton';
 import { runSimulation } from '@/utils/simulation';
@@ -80,7 +80,7 @@ function App() {
 
         {simulationResult && (
           <>
-            <ChargeStation simulationResult={simulationResult} />
+            <SimulationResults simulationResult={simulationResult} />
             <ExemplaryDayChart dailyData={simulationResult.dailyData} />
           </>
         )}
