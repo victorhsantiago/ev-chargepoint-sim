@@ -8,6 +8,7 @@ describe('ChargeStation Component', () => {
     theoreticalMaxDemand: 50,
     maxActualDemand: 45.67,
     concurrencyFactor: 0.75,
+    dailyData: [],
   };
 
   it('should render the simulation results table with correct data', () => {
