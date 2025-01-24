@@ -10,13 +10,7 @@ The Charge Point Visualization Tool is a web app that lets users see how electri
   - Number of charge points
   - Arrival probability multiplier (20-200%, default: 100%)
   - Car consumption (default: 18 kWh)
-  - Charging power per charge point (default: 11 kW)
-- Dynamic Charge Point Management:
-  - Add and remove different types of charge points (e.g., 5 x 11kW, 3 x 22kW, 1 x 50kW)
-- Output Metrics:
-  - Total charging values (in kW) per charge point
-  - Total energy charged (in kWh)
-  - Number of charging events per year/month/week/day
+  - Charging power per charge point (default: 11 kWh)
 
 ## Tech Stack
 
@@ -42,18 +36,13 @@ npm run dev
 
 ## Usage
 
-### Simulation
-
 1. **Insert Seed**: Use the input field to add/modify the seed number.
 2. **Set number of Charge Points**: Adjuts the amount of charge points to be used in the simulation.
-3. **Get your Results**: Hit the `Simulate` button the see the simulation output.
+3. **Set Parameters**: Adjust the arrival probability multiplier and car consumption as needed.
+4. **Configure Charge Points**: Use the input fields to set the desired power.
+5. **Get your Results**: Hit the `Simulate` button the see the simulation output.
 
-### Visualizer
-
-1. **Configure Charge Points**: Use the input fields to set the desired number of charge points, their power, and count.
-2. **Set Parameters**: Adjust the arrival probability multiplier and car consumption as needed.
-3. **Add/Remove Charge Points**: Click the `+ Add Charge Point Type` button to add a new charge point type, or click "Remove" to delete an existing one.
-4. **Submit Data**: Click the `Execute` button to visualize the results based on your inputs.
+## Improvements
 
 ## Tests
 
