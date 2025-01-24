@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import SimulationResults from './index';
 import { SimulationResult } from '@/models';
+import formatNumber from '@/utils/formatNumber';
 
 describe('ChargeStation Component', () => {
   const mockSimulationResult: SimulationResult = {
@@ -18,15 +19,31 @@ describe('ChargeStation Component', () => {
     expect(title).toBeDefined();
 
     expect(screen.getByText('Total energy consumed')).toBeDefined();
-    expect(screen.getByText('123.45 kWh')).toBeDefined();
+    expect(
+      screen.getByText(
+        `${formatNumber(mockSimulationResult.totalEnergyConsumed)} kW`
+      )
+    ).toBeDefined();
 
     expect(screen.getByText('Theoretical maximum demand')).toBeDefined();
-    expect(screen.getByText('50 kW')).toBeDefined();
+    expect(
+      screen.getByText(
+        `${formatNumber(mockSimulationResult.theoreticalMaxDemand)} kWh`
+      )
+    ).toBeDefined();
 
     expect(screen.getByText('Actual maximum demand')).toBeDefined();
-    expect(screen.getByText('45.67 kW')).toBeDefined();
+    expect(
+      screen.getByText(
+        `${formatNumber(mockSimulationResult.maxActualDemand)} kWh`
+      )
+    ).toBeDefined();
 
     expect(screen.getByText('Concurrency factor')).toBeDefined();
-    expect(screen.getByText('75.00%')).toBeDefined();
+    expect(
+      screen.getByText(
+        `${formatNumber(mockSimulationResult.concurrencyFactor * 100)}%`
+      )
+    ).toBeDefined();
   });
 });
