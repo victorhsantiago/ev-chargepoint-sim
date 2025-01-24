@@ -1,5 +1,6 @@
 import { SimulationResult } from '@/models';
 import BaseIcon from '../BaseIcon';
+import formatNumber from '@/utils/formatNumber';
 
 type Props = {
   simulationResult: SimulationResult;
@@ -9,25 +10,25 @@ function SimulationResults({ simulationResult }: Props) {
   const tableData = [
     {
       label: 'Total energy consumed',
-      value: `${simulationResult.totalEnergyConsumed.toFixed(2)} kWh`,
+      value: `${formatNumber(simulationResult.totalEnergyConsumed)} kW`,
       icon: 'electric_bolt',
       iconHexColor: '#F9C784',
     },
     {
       label: 'Theoretical maximum demand',
-      value: `${simulationResult.theoreticalMaxDemand} kW`,
+      value: `${simulationResult.theoreticalMaxDemand} kWh`,
       icon: 'energy_program_saving',
       iconHexColor: '#80A4AE',
     },
     {
       label: 'Actual maximum demand',
-      value: `${simulationResult.maxActualDemand.toFixed(2)} kW`,
+      value: `${formatNumber(simulationResult.maxActualDemand)} kWh`,
       icon: 'energy_program_time_used',
       iconHexColor: '#9DC384',
     },
     {
       label: 'Concurrency factor',
-      value: `${(simulationResult.concurrencyFactor * 100).toFixed(2)}%`,
+      value: `${formatNumber(simulationResult.concurrencyFactor * 100)}%`,
       icon: 'pie_chart',
       iconHexColor: '#789DE5',
     },

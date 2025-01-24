@@ -67,7 +67,7 @@ function App() {
             />
 
             <InputNumber
-              label="Charging Power (kW)"
+              label="Charging Power (kWh)"
               value={chargingPower}
               onChange={(e) => setChargingPower(Number(e.target.value))}
             />
