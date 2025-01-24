@@ -1,9 +1,5 @@
 # Reonic · Hometask
 
-## Overview
-
-The Charge Point Visualization Tool is a web app that lets users see how electric vehicle charging points work. Users can set up different types of charge points and see the results in an easy-to-use interface.
-
 ## Features
 
 - Input Parameters:
@@ -19,6 +15,13 @@ The Charge Point Visualization Tool is a web app that lets users see how electri
 - **Typescript**: Used for type safety
 - **Linting**: Eslint
 - **Code Formatting**: Prettier
+
+## Improvements
+
+1. **Error Handling**: Improve error handling throughout the application to provide better user feedback and debugging information.
+2. **Performance Optimization**: Optimize the performance of the simulation and UI rendering to ensure a smooth user experience.
+3. **Accessibility**: Enhance the accessibility of the application to ensure it is usable by people with disabilities.
+4. **State Management**: Improve state management using libraries like Redux or Context API to handle complex state logic more efficiently.
 
 ## Getting Started
 
@@ -41,8 +44,6 @@ npm run dev
 3. **Set Parameters**: Adjust the arrival probability multiplier and car consumption as needed.
 4. **Configure Charge Points**: Use the input fields to set the desired power.
 5. **Get your Results**: Hit the `Simulate` button the see the simulation output.
-
-## Improvements
 
 ## Tests
 
