@@ -1,8 +1,12 @@
 .icon-button {
-  @apply pointer-events-auto;
   @apply rounded-full;
   @apply px-3;
   @apply py-2;
+  @apply flex;
+  @apply items-center;
+  @apply gap-1;
+  @apply disabled:opacity-40;
+  @apply disabled:pointer-events-none;
 }
 
 .icon-button--primary {

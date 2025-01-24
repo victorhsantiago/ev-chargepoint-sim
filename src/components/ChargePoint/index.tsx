@@ -45,7 +45,7 @@ function ChargePoint({
             ariaLabel="Remove charge point type"
             className="self-end p-2"
             leftIcon="cross"
-            style="secondary"
+            variant="secondary"
             onClick={() => removeChargePointType(index)}
           />
         </div>

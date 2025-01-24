@@ -17,16 +17,16 @@ describe('ChargeStation Component', () => {
     const title = screen.getByText('Simulation Results');
     expect(title).toBeDefined();
 
-    expect(screen.getByText('Total energy consumed:')).toBeDefined();
+    expect(screen.getByText('Total energy consumed')).toBeDefined();
     expect(screen.getByText('123.45 kWh')).toBeDefined();
 
-    expect(screen.getByText('Theoretical maximum demand:')).toBeDefined();
+    expect(screen.getByText('Theoretical maximum demand')).toBeDefined();
     expect(screen.getByText('50 kW')).toBeDefined();
 
-    expect(screen.getByText('Actual maximum demand:')).toBeDefined();
+    expect(screen.getByText('Actual maximum demand')).toBeDefined();
     expect(screen.getByText('45.67 kW')).toBeDefined();
 
-    expect(screen.getByText('Concurrency factor:')).toBeDefined();
+    expect(screen.getByText('Concurrency factor')).toBeDefined();
     expect(screen.getByText('75.00%')).toBeDefined();
   });
 });

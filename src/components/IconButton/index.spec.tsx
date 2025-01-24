@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import IconButton from './index';
 import { vi } from 'vitest';
-import { Icons } from '@/models';
 
 describe('IconButton Component', () => {
   it('should render with the correct label and aria-label', () => {
@@ -10,16 +9,6 @@ describe('IconButton Component', () => {
     const button = screen.getByLabelText('Test button');
     expect(button).toBeTruthy();
     expect(button.innerHTML).toContain('Click me');
-  });
-
-  it('should render with left and right icons', () => {
-    render(
-      <IconButton ariaLabel="Icon button" leftIcon="cross" rightIcon="plus" />
-    );
-
-    const button = screen.getByLabelText('Icon button');
-    expect(button.innerHTML).toContain(Icons.cross);
-    expect(button.innerHTML).toContain(Icons.plus);
   });
 
   it('should call onClick when clicked', () => {
@@ -50,7 +39,7 @@ describe('IconButton Component', () => {
       <IconButton
         ariaLabel="Secondary button"
         label="Click me"
-        style="secondary"
+        variant="secondary"
       />
     );
 

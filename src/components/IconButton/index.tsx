@@ -1,14 +1,13 @@
-import { Icons } from '@/models';
+import BaseIcon from '../BaseIcon';
 import './style.css';
 
-type Props = {
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   ariaLabel: string;
   className?: string;
   label?: string;
-  leftIcon?: keyof typeof Icons;
-  rightIcon?: keyof typeof Icons;
-  style?: 'primary' | 'secondary';
-  type?: 'button' | 'submit' | 'reset' | undefined;
+  leftIcon?: string;
+  rightIcon?: string;
+  variant?: 'primary' | 'secondary';
   onClick?: () => void;
 };
 
@@ -18,20 +17,27 @@ function IconButton({
   label,
   leftIcon,
   rightIcon,
-  style = 'primary',
+  variant = 'primary',
   type = 'button',
   onClick,
+  ...rest
 }: Props) {
   return (
     <button
-      className={`icon-button ${style == 'primary' && 'icon-button--primary'} ${style == 'secondary' && 'icon-button--secondary'} ${className || ''}`.trim()}
+      {...rest}
+      className={`
+        icon-button
+        ${variant == 'primary' && 'icon-button--primary'}
+        ${variant == 'secondary' && 'icon-button--secondary'}
+        ${className || ''}
+      `.trim()}
       type={type}
       onClick={onClick}
       aria-label={ariaLabel}
     >
-      {leftIcon && <span aria-hidden>{Icons[leftIcon]}</span>}
+      {leftIcon && <BaseIcon icon={leftIcon} size={1.25} />}
       {label && <span>{label}</span>}
-      {rightIcon && <span aria-hidden>{Icons[rightIcon]}</span>}
+      {rightIcon && <BaseIcon icon={rightIcon} size={1.25} />}
     </button>
   );
 }

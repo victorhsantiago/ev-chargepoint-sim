@@ -9,6 +9,7 @@ import InputRange from '@/components/InputRange';
 import ExemplaryDayChart from '@/components/ExemplaryDayChart';
 
 function App() {
+  const [loading, setLoading] = useState(false);
   const [seed, setSeed] = useState(12345);
   const [numChargepoints, setNumChargepoints] = useState(20);
   const [arrivalProbabilityMultiplier, setArrivalProbabilityMultiplier] =
@@ -20,6 +21,7 @@ function App() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const result = await runSimulation({
       arrivalProbabilityMultiplier,
       chargingPower,
@@ -28,12 +30,13 @@ function App() {
       seed,
     });
     setSimulationResult(result);
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="grid gap-4 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold">Charging Station Simulation</h1>
+        <h1 className="text-2xl font-bold">EV Chargingpoint Sim</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col gap-4">
@@ -70,12 +73,21 @@ function App() {
             />
           </div>
 
-          <IconButton
-            ariaLabel="Simulate"
-            label="Simulate"
-            type="submit"
-            rightIcon="submit"
-          />
+          <div className="flex items-center gap-4">
+            <IconButton
+              ariaLabel="Simulate"
+              label="Simulate"
+              type="submit"
+              rightIcon="play_circle"
+              disabled={loading}
+            />
+
+            {loading && (
+              <span className="text-gray-500 font-thin text-sm">
+                Processing...
+              </span>
+            )}
+          </div>
         </form>
 
         {simulationResult && (

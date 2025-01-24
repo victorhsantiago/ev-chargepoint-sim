@@ -11,16 +11,12 @@ interface BaseIconProps {
  * @param size rem units
  * @returns
  */
-function BaseIcon({
-  icon,
-  iconHexColor = '#ffffff',
-  size = 1.5,
-}: BaseIconProps) {
+function BaseIcon({ icon, iconHexColor, size = 1.5 }: BaseIconProps) {
   return (
     <span
       className="material-symbols-rounded"
       style={{
-        color: iconHexColor,
+        ...(iconHexColor && { color: iconHexColor }),
         fontSize: `${size}rem`,
       }}
       aria-hidden="true"
