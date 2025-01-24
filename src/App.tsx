@@ -44,12 +44,16 @@ function App() {
               label="Seed"
               value={seed}
               onChange={(e) => setSeed(Number(e.target.value))}
+              min={1}
+              required
             />
 
             <InputNumber
               label="Number of Charge Points:"
               value={numChargepoints}
               onChange={(e) => setNumChargepoints(Number(e.target.value))}
+              min={1}
+              required
             />
 
             <InputRange
@@ -64,12 +68,16 @@ function App() {
               label="Car Consumption (kWh)"
               value={consumption}
               onChange={(e) => setConsumption(Number(e.target.value))}
+              min={1}
+              required
             />
 
             <InputNumber
               label="Charging Power (kWh)"
               value={chargingPower}
               onChange={(e) => setChargingPower(Number(e.target.value))}
+              min={1}
+              required
             />
           </div>
 

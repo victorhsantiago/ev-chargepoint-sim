@@ -1,15 +1,16 @@
-type Props = {
+type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   value: number | string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function InputNumber({ label, value, onChange }: Props) {
+function InputNumber({ label, value, onChange, ...rest }: Props) {
   return (
     <div className="grow">
       <label className="block text-sm font-medium text-gray-700">
         {label}
         <input
+          {...rest}
           type="number"
           value={value}
           onChange={onChange}
