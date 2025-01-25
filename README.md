@@ -1,12 +1,17 @@
 # Reonic · Hometask
 
-## Features
+Imagine you're a shopowner and you have a number of parking spaces (e.g. 200) available in front of your store for shoppers & employees.
+Now, because you see more and more EVs parking there every day, you're planning on building some chargepoints.
 
-- Input Parameters:
-  - Number of charge points
-  - Arrival probability multiplier (20-200%, default: 100%)
-  - Car consumption (default: 18 kWh)
-  - Charging power per charge point (default: 11 kWh)
+This app helps you on that decision by simulating a whole year of chargepoints usage, making it super easy to plan your investiment.
+
+## Usage
+
+1. **Insert Seed**: Use the input field to add/modify the seed number.
+2. **Set number of Charge Points**: Adjuts the amount of charge points to be used in the simulation.
+3. **Set Parameters**: Adjust the arrival probability multiplier and car consumption as needed.
+4. **Configure Charge Points**: Use the input fields to set the desired power.
+5. **Get your Results**: Hit the `Simulate` button the see the simulation output.
 
 ## Tech Stack
 
@@ -36,14 +41,6 @@ npm install
 ```bash
 npm run dev
 ```
-
-## Usage
-
-1. **Insert Seed**: Use the input field to add/modify the seed number.
-2. **Set number of Charge Points**: Adjuts the amount of charge points to be used in the simulation.
-3. **Set Parameters**: Adjust the arrival probability multiplier and car consumption as needed.
-4. **Configure Charge Points**: Use the input fields to set the desired power.
-5. **Get your Results**: Hit the `Simulate` button the see the simulation output.
 
 ## Tests
 
